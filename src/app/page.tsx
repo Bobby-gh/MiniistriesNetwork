@@ -4,6 +4,15 @@
 
 import Link from "next/link";
 import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import {
   ArrowRight,
   BellRing,
   CalendarCheck,
@@ -84,7 +93,6 @@ export default function DashboardPage() {
   const lastSundayRate = lastSunday ? Math.round((lastSundayCount / Math.max(1, activeCount)) * 100) : 0;
 
   const series: MonthIncome[] = incomeSeries(db, lastNMonths(6));
-  const maxTotal = Math.max(1, ...series.map((s) => s.total));
 
   const recent = [...db.payments].sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 8);
   const queuedAlerts = db.alerts.filter((a) => a.status === "queued").length;
@@ -190,25 +198,55 @@ export default function DashboardPage() {
               </Link>
             }
           />
-          <div className="flex h-48 items-end gap-2 sm:gap-4">
-            {series.map((s) => {
-              const h = Math.max(6, Math.round((s.total / maxTotal) * 100));
-              return (
-                <div key={s.month} className="flex h-full flex-1 flex-col justify-end gap-2">
-                  <p className="text-center text-[10px] font-bold text-brand-800/70">{formatMoney(s.total, symbol)}</p>
-                  <div
-                    className="flex w-full flex-col-reverse overflow-hidden rounded-t-lg bg-brand-50"
-                    style={{ height: `${h}%` }}
-                    title={`${monthLabel(s.month)}: ${formatMoney(s.total, symbol)}`}
-                  >
-                    {(Object.keys(SEGMENT) as PaymentType[]).map((t) =>
-                      s[t] > 0 ? <div key={t} className={SEGMENT[t]} style={{ height: `${(s[t] / s.total) * 100}%` }} /> : null,
-                    )}
-                  </div>
-                  <p className="text-center text-[10px] font-semibold text-brand-800/60">{monthLabel(s.month)}</p>
-                </div>
-              );
-            })}
+          <div className="h-48 w-full" role="img" aria-label="Stacked bar chart of income by category for the last six months">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={series} margin={{ top: 8, right: 8, bottom: 0, left: 8 }}>
+                <CartesianGrid vertical={false} stroke="#dce8fe" />
+                <XAxis
+                  dataKey="month"
+                  tickFormatter={monthLabel}
+                  tick={{ fill: "#1b41b4", fontSize: 10, fontWeight: 600 }}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  tickFormatter={(value: number) =>
+                    `${symbol}${Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(value)}`
+                  }
+                  tick={{ fill: "#1b41b4", fontSize: 10 }}
+                  tickLine={false}
+                  axisLine={false}
+                  width={48}
+                />
+                <Tooltip
+                  labelFormatter={(label) => monthLabel(String(label))}
+                  formatter={(value, name) => [
+                    formatMoney(Number(value), symbol),
+                    String(name),
+                  ]}
+                  contentStyle={{ borderRadius: 12, borderColor: "#dce8fe", fontSize: 12 }}
+                  cursor={{ fill: "#eff5ff" }}
+                />
+                {(Object.keys(SEGMENT) as PaymentType[]).map((type) => (
+                  <Bar
+                    key={type}
+                    dataKey={type}
+                    name={CATEGORY_LABEL[type]}
+                    stackId="income"
+                    fill={
+                      {
+                        dues: "#2563eb",
+                        donation: "#10b981",
+                        funeral: "#6366f1",
+                        building: "#f59e0b",
+                        other: "#38bdf8",
+                      }[type]
+                    }
+                    radius={type === "other" ? [4, 4, 0, 0] : undefined}
+                  />
+                ))}
+              </BarChart>
+            </ResponsiveContainer>
           </div>
           <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 border-t border-brand-100 pt-3">
             {(Object.keys(SEGMENT) as PaymentType[]).map((t) => (

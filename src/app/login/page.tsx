@@ -46,33 +46,23 @@ export default function LoginPage() {
 
   return (
     <div className="grid min-h-screen bg-surface lg:grid-cols-[1fr_1.05fr]">
-      {/* Logo panel — the image leads; writing stays minimal */}
-      <aside className="relative hidden flex-col items-center justify-center overflow-hidden border-r border-neutral-200 bg-white px-10 lg:flex">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-60"
-          style={{
-            backgroundImage: "radial-gradient(circle at 1px 1px, #d8dee9 1px, transparent 0)",
-            backgroundSize: "26px 26px",
-          }}
-          aria-hidden
+      {/* Full-height image panel */}
+      <aside className="relative hidden min-h-screen flex-col items-center justify-end overflow-hidden border-r border-neutral-200 bg-white px-10 pb-12 lg:flex">
+        <Image
+          src="/ministries_logo.jpeg"
+          alt="Ministries logo"
+          fill
+          priority
+          sizes="50vw"
+          className="object-contain p-8 pb-36"
         />
-        <div className="relative flex flex-col items-center text-center">
-          <div className="rounded-3xl border border-neutral-200 bg-white p-3 shadow-pop">
-            <Image
-              src="/ministries_logo.jpeg"
-              alt="Ministries logo"
-              width={640}
-              height={640}
-              priority
-              className="h-56 w-56 rounded-2xl object-cover sm:h-64 sm:w-64"
-            />
-          </div>
-          <h1 className="mt-8 text-2xl font-semibold tracking-tight text-ink">Diocese Network</h1>
-          <p className="mt-2 max-w-xs text-sm text-neutral-500">{db.settings.dioceseName}</p>
+        <div className="relative z-10 w-full bg-white/90 py-5 text-center backdrop-blur-sm">
+          <h1 className="text-2xl font-semibold tracking-tight text-ink">Diocese Network</h1>
+          <p className="mt-2 text-sm text-neutral-500">{db.settings.dioceseName}</p>
+          <p className="mt-4 text-xs text-neutral-400">
+            © {new Date().getFullYear()} {db.settings.dioceseName}
+          </p>
         </div>
-        <p className="absolute bottom-8 text-xs text-neutral-400">
-          © {new Date().getFullYear()} {db.settings.dioceseName}
-        </p>
       </aside>
 
       {/* Form */}

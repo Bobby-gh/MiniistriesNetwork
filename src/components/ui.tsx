@@ -121,12 +121,14 @@ export function StatCard({
   sub,
   icon,
   tone = "blue",
+  valueClassName = "text-[26px]",
 }: {
   label: string;
   value: string;
   sub?: string;
   icon?: ReactNode;
   tone?: keyof typeof TONES | string;
+  valueClassName?: string;
 }) {
   const t = TONES[tone] ?? TONES.blue;
   return (
@@ -135,7 +137,7 @@ export function StatCard({
         <p className="text-[11px] font-semibold tracking-wider text-neutral-500 uppercase">{label}</p>
         {icon && <span className={cn("shrink-0 [&>svg]:h-4 [&>svg]:w-4", t.text)}>{icon}</span>}
       </div>
-      <p className="tabular mt-2 text-[26px] leading-none font-semibold tracking-tight text-ink">{value}</p>
+      <p className={cn("tabular mt-2 leading-none font-semibold tracking-tight text-ink", valueClassName)}>{value}</p>
       {sub && <p className="mt-2 text-xs text-neutral-500">{sub}</p>}
     </Card>
   );

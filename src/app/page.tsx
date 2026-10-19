@@ -151,6 +151,7 @@ export default function DashboardPage() {
         <StatCard
           label={`Dues — ${monthName}`}
           value={formatMoney(duesThisMonth, symbol)}
+          valueClassName="text-xl"
           sub={`${compliance}% compliance (${paidCount}/${activeCount})`}
           icon={<Wallet className="h-5 w-5" />}
           tone={compliance >= 75 ? "emerald" : "amber"}
@@ -158,6 +159,7 @@ export default function DashboardPage() {
         <StatCard
           label="Donations — this month"
           value={formatMoney(donationsThisMonth, symbol)}
+          valueClassName="text-xl"
           sub={`${monthPayments.filter((p) => p.type === "donation").length} gifts recorded`}
           icon={<HandCoins className="h-5 w-5" />}
           tone="emerald"
@@ -172,6 +174,7 @@ export default function DashboardPage() {
         <StatCard
           label="Building fund"
           value={formatMoney(buildingTotal, symbol)}
+          valueClassName="text-xl"
           sub={`${Math.min(100, Math.round((buildingTotal / Math.max(1, target)) * 100))}% of ${formatMoney(target, symbol)} target`}
           icon={<PiggyBank className="h-5 w-5" />}
           tone="amber"
@@ -262,7 +265,7 @@ export default function DashboardPage() {
           <Card>
             <CardTitle title={db.settings.buildingFundName} hint="Project funding progress" />
             <div className="mb-2 flex items-end justify-between">
-              <p className="text-2xl font-extrabold text-ink">{formatMoney(buildingTotal, symbol)}</p>
+              <p className="text-xl font-extrabold text-ink">{formatMoney(buildingTotal, symbol)}</p>
               <Badge tone={buildingTotal >= target ? "success" : "info"}>
                 {Math.min(100, Math.round((buildingTotal / Math.max(1, target)) * 100))}%
               </Badge>

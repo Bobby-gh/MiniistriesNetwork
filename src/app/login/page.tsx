@@ -50,7 +50,7 @@ export default function LoginPage() {
       <aside className="relative hidden min-h-screen overflow-hidden bg-neutral-950 lg:block">
         <Image
           src="/church-login.jpg"
-          alt="Congregation gathered for worship in a contemporary church"
+          alt="A dark cross silhouetted against blue light"
           fill
           priority
           sizes="50vw"

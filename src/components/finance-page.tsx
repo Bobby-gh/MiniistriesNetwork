@@ -191,7 +191,7 @@ export function FinancePage({
       />
 
       {flash && (
-        <div className="mb-4 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
+        <div className="mb-4 flex items-center gap-2 rounded-xl border border-emerald-200/70 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
           <CheckCircle2 className="h-4 w-4 shrink-0" />
           {flash}
         </div>
@@ -315,13 +315,13 @@ export function FinancePage({
               {outstanding.slice(0, 24).map((m) => (
                 <span
                   key={m.id}
-                  className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-800"
+                  className="rounded-md bg-neutral-100 px-2.5 py-1 text-xs font-medium text-[#475467]"
                 >
                   {m.firstName} {m.lastName}
                 </span>
               ))}
               {outstanding.length > 24 && (
-                <span className="rounded-full bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-800">
+                <span className="rounded-md bg-white px-2.5 py-1 text-xs font-medium text-neutral-500 ring-1 ring-neutral-200">
                   +{outstanding.length - 24} more
                 </span>
               )}

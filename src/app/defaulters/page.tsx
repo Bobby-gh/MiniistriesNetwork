@@ -117,13 +117,15 @@ export default function DefaultersPage() {
         }
       />
 
-      <div className="mb-4 rounded-xl border border-brand-200 bg-gradient-to-r from-brand-50 to-white px-4 py-3 text-sm text-brand-900">
-        <ShieldAlert className="mr-2 inline h-4 w-4 text-brand-700" />
-        A member is flagged as a defaulter after <strong>{threshold} consecutive unpaid month(s)</strong> of dues.{" "}
-        <a href="/settings" className="font-semibold text-brand-700 underline underline-offset-2">
-          Change in Settings
-        </a>
-        .
+      <div className="mb-4 flex items-center gap-2.5 rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-600 shadow-card">
+        <ShieldAlert className="h-4 w-4 shrink-0 text-neutral-400" />
+        <p>
+          A member is flagged as a defaulter after <strong className="font-semibold text-ink">{threshold} consecutive unpaid month(s)</strong> of dues.{" "}
+          <a href="/settings" className="font-semibold text-brand-700 underline underline-offset-2">
+            Change in Settings
+          </a>
+          .
+        </p>
       </div>
 
       {flash && (

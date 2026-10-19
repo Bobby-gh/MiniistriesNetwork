@@ -1,45 +1,54 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-50: #eff6ff;
-  --color-brand-100: #dbeafe;
-  --color-brand-200: #bfdbfe;
-  --color-brand-300: #93c5fd;
-  --color-brand-400: #60a5fa;
-  --color-brand-500: #3b82f6;
+  --color-brand-50: #eff5ff;
+  --color-brand-100: #dce8fe;
+  --color-brand-200: #bfd6fd;
+  --color-brand-300: #93b9fb;
+  --color-brand-400: #6096f7;
+  --color-brand-500: #3b7df0;
   --color-brand-600: #2563eb;
   --color-brand-700: #1d4ed8;
-  --color-brand-800: #1e40af;
-  --color-brand-900: #1e3a8a;
-  --color-brand-950: #172554;
+  --color-brand-800: #1b41b4;
+  --color-brand-900: #1c3a8f;
+  --color-brand-950: #162757;
 
-  --color-ink: #0f1e46;
+  /* Ink = near-black navy for headings; surface = cool off-white page bg */
+  --color-ink: #101828;
+  --color-surface: #f7f8fa;
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
-  --shadow-card: 0 1px 2px rgba(15, 30, 70, 0.06), 0 4px 16px rgba(15, 30, 70, 0.07);
+  /* Hairline, low-contrast elevation — no heavy Material-style shadows */
+  --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.04);
+  --shadow-pop: 0 16px 40px rgba(16, 24, 40, 0.12), 0 2px 8px rgba(16, 24, 40, 0.06);
 }
 
 body {
-  background: #f4f7fc;
-  color: var(--color-ink);
+  background: var(--color-surface);
+  color: #475467;
   font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Thin, brand-tinted scrollbars */
+/* Tabular figures for money and counters */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #c7d7f5;
+  background: #d8dee9;
   border-radius: 9999px;
-  border: 2px solid transparent;
+  border: 3px solid transparent;
   background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #a9c2ef;
+  background: #c3ccdb;
   background-clip: content-box;
 }
 

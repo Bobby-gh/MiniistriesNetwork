@@ -182,8 +182,8 @@ export default function AttendancePage() {
                             onClick={() => toggle(m.id)}
                             className={
                               isPresent
-                                ? "inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-700"
-                                : "inline-flex items-center gap-1.5 rounded-lg border border-brand-200 bg-white px-3 py-1.5 text-xs font-bold text-brand-800 hover:bg-brand-50"
+                                ? "inline-flex items-center gap-1.5 rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-700"
+                                : "inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-500 hover:border-neutral-300 hover:text-ink"
                             }
                           >
                             {isPresent ? "Present ✓" : "Absent"}

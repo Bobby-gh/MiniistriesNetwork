@@ -124,11 +124,11 @@ export default function DashboardPage() {
           <Link
             key={q.href}
             href={q.href}
-            className="group flex items-center gap-2.5 rounded-xl border border-brand-100 bg-white px-3.5 py-3 text-sm font-semibold text-brand-900 shadow-card transition-colors hover:border-brand-300 hover:bg-brand-50"
+            className="group flex items-center gap-2.5 rounded-xl border border-neutral-200/70 bg-white px-3.5 py-3 text-sm font-medium text-[#344054] shadow-card transition-colors hover:border-brand-300 hover:text-brand-700"
           >
-            <q.icon className="h-4 w-4 text-brand-600" />
+            <q.icon className="h-4 w-4 text-neutral-400 transition-colors group-hover:text-brand-600" />
             <span className="truncate">{q.label}</span>
-            <ArrowRight className="ml-auto h-3.5 w-3.5 -translate-x-1 text-brand-300 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
+            <ArrowRight className="ml-auto h-3.5 w-3.5 -translate-x-1 text-neutral-300 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
           </Link>
         ))}
       </div>
@@ -247,39 +247,25 @@ export default function DashboardPage() {
                 </Link>
               }
             />
-            <ul className="space-y-2 text-sm">
-              <li className="flex items-center justify-between rounded-lg bg-rose-50 px-3 py-2.5 ring-1 ring-rose-100">
-                <span className="flex items-center gap-2 font-semibold text-rose-800">
-                  <ShieldAlert className="h-4 w-4" /> Members in arrears
-                </span>
-                <Link href="/defaulters" className="flex items-center gap-1 text-xs font-bold text-rose-700 hover:underline">
-                  {defaulterList.length} <ArrowRight className="h-3 w-3" />
-                </Link>
-              </li>
-              <li className="flex items-center justify-between rounded-lg bg-amber-50 px-3 py-2.5 ring-1 ring-amber-100">
-                <span className="flex items-center gap-2 font-semibold text-amber-800">
-                  <Wallet className="h-4 w-4" /> Unpaid dues this month
-                </span>
-                <Link href="/dues" className="flex items-center gap-1 text-xs font-bold text-amber-700 hover:underline">
-                  {activeCount - paidCount} <ArrowRight className="h-3 w-3" />
-                </Link>
-              </li>
-              <li className="flex items-center justify-between rounded-lg bg-brand-50 px-3 py-2.5 ring-1 ring-brand-100">
-                <span className="flex items-center gap-2 font-semibold text-brand-900">
-                  <BellRing className="h-4 w-4" /> Queued alerts
-                </span>
-                <Link href="/alerts" className="flex items-center gap-1 text-xs font-bold text-brand-700 hover:underline">
-                  {queuedAlerts} <ArrowRight className="h-3 w-3" />
-                </Link>
-              </li>
-              <li className="flex items-center justify-between rounded-lg bg-indigo-50 px-3 py-2.5 ring-1 ring-indigo-100">
-                <span className="flex items-center gap-2 font-semibold text-indigo-800">
-                  <Repeat2 className="h-4 w-4" /> Pending transfers
-                </span>
-                <Link href="/transfers" className="flex items-center gap-1 text-xs font-bold text-indigo-700 hover:underline">
-                  {pendingTransfers} <ArrowRight className="h-3 w-3" />
-                </Link>
-              </li>
+            <ul className="divide-y divide-neutral-100 text-sm">
+              {[
+                { icon: ShieldAlert, label: "Members in arrears", count: defaulterList.length, href: "/defaulters", dot: "bg-rose-500" },
+                { icon: Wallet, label: "Unpaid dues this month", count: activeCount - paidCount, href: "/dues", dot: "bg-amber-500" },
+                { icon: BellRing, label: "Queued alerts", count: queuedAlerts, href: "/alerts", dot: "bg-brand-500" },
+                { icon: Repeat2, label: "Pending transfers", count: pendingTransfers, href: "/transfers", dot: "bg-indigo-400" },
+              ].map((row) => (
+                <li key={row.label} className="flex items-center gap-3 py-2.5 first:pt-0 last:pb-0">
+                  <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${row.dot}`} aria-hidden />
+                  <row.icon className="h-4 w-4 shrink-0 text-neutral-400" />
+                  <span className="flex-1 text-[#475467]">{row.label}</span>
+                  <Link
+                    href={row.href}
+                    className="tabular flex items-center gap-1 text-xs font-semibold text-ink hover:text-brand-700"
+                  >
+                    {row.count} <ArrowRight className="h-3 w-3 text-neutral-300" />
+                  </Link>
+                </li>
+              ))}
             </ul>
           </Card>
         </div>
@@ -344,12 +330,12 @@ export default function DashboardPage() {
             .map((m) => {
               const rate = attendanceRate(db, m.id) ?? 0;
               return (
-                <div key={m.id} className="rounded-lg bg-brand-50/70 px-3 py-2.5 ring-1 ring-brand-100">
-                  <div className="mb-1.5 flex items-center justify-between text-xs">
-                    <span className="font-bold text-ink">
+                <div key={m.id} className="rounded-lg border border-neutral-200/70 px-3 py-2.5">
+                  <div className="mb-2 flex items-center justify-between text-xs">
+                    <span className="font-medium text-[#344054]">
                       {m.firstName} {m.lastName}
                     </span>
-                    <span className="font-semibold text-brand-800/70">{rate}%</span>
+                    <span className="tabular font-semibold text-ink">{rate}%</span>
                   </div>
                   <ProgressBar value={rate} max={100} tone={rate >= 70 ? "emerald" : rate >= 40 ? "brand" : "amber"} />
                 </div>

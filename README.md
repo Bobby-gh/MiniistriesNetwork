@@ -1,6 +1,6 @@
 # Diocese Network — Church Management System
 
-A complete church **diocese network** web application built with Next.js (App Router), TypeScript and Tailwind CSS. Brand colours are **blue & white**, with a custom shield-and-cross logo (`src/components/logo.tsx` + `src/app/icon.svg`).
+A complete church **diocese network** web application built with Next.js (App Router), TypeScript and Tailwind CSS. Brand colours are **blue & white** with neutral surfaces; the brand mark is the ministries logo (`public/ministries_logo.jpeg`, used on the login page, sidebar and header via `src/components/logo.tsx`; `src/app/icon.svg` is the favicon).
 
 ## Features
 

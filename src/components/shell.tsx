@@ -1,6 +1,6 @@
 "use client";
 
-// App chrome: blue sidebar navigation + white top bar.
+// App chrome: light sidebar navigation + minimal top bar.
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -25,7 +25,7 @@ import {
   BarChart3,
   type LucideIcon,
 } from "lucide-react";
-import { Logo, LogoMark } from "./logo";
+import { Logo, BrandLogo } from "./logo";
 import { cn } from "./ui";
 import { useStore } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
@@ -104,6 +104,7 @@ const TITLES: Record<string, { title: string; sub: string }> = {
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const { db } = useStore();
+  const { session } = useAuth();
   const defaulterCount = defaulters(db).length;
   const queuedAlerts = db.alerts.filter((a) => a.status === "queued").length;
   const month = currentMonthKey();
@@ -117,7 +118,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           <button
             onClick={onNavigate}
             aria-label="Close menu"
-            className="rounded-lg p-1.5 text-brand-200 hover:bg-white/10 hover:text-white"
+            className="rounded-lg p-1.5 text-neutral-400 hover:bg-neutral-100 hover:text-ink"
           >
             <X className="h-5 w-5" />
           </button>
@@ -127,7 +128,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
       <nav className="flex-1 overflow-y-auto px-3 pb-4">
         {NAV.map((group) => (
           <div key={group.section} className="mb-4">
-            <p className="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-brand-300/70">
+            <p className="px-3 pb-1.5 text-[10px] font-semibold tracking-wider text-neutral-400 uppercase">
               {group.section}
             </p>
             <ul className="space-y-0.5">
@@ -143,17 +144,19 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
                       className={cn(
                         "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                         active
-                          ? "bg-white text-brand-900 shadow-sm"
-                          : "text-brand-100 hover:bg-white/10 hover:text-white",
+                          ? "bg-brand-50 text-brand-700"
+                          : "text-[#475467] hover:bg-neutral-50 hover:text-ink",
                       )}
                     >
-                      <item.icon className={cn("h-[18px] w-[18px]", active ? "text-brand-700" : "text-brand-300")} />
+                      <item.icon
+                        className={cn("h-[17px] w-[17px]", active ? "text-brand-600" : "text-neutral-400")}
+                      />
                       <span className="flex-1 truncate">{item.label}</span>
                       {count > 0 && (
                         <span
                           className={cn(
-                            "rounded-full px-1.5 py-0.5 text-[10px] font-bold",
-                            active ? "bg-rose-100 text-rose-700" : "bg-rose-500/90 text-white",
+                            "tabular rounded-md px-1.5 py-0.5 text-[10px] font-semibold",
+                            active ? "bg-rose-50 text-rose-600" : "bg-rose-50 text-rose-500",
                           )}
                         >
                           {count}
@@ -168,16 +171,14 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         ))}
       </nav>
 
-      <div className="border-t border-white/10 px-5 py-4">
-        <div className="rounded-lg bg-white/5 p-3">
-          <p className="text-[11px] font-bold text-white">
-            {db.settings.dioceseName}
+      <div className="border-t border-neutral-100 px-5 py-4">
+        <div className="rounded-xl bg-neutral-50 p-3">
+          <p className="text-xs font-semibold text-ink">{db.settings.dioceseName}</p>
+          <p className="mt-0.5 text-[11px] text-neutral-500">
+            {paidThisMonth} dues payments this month
           </p>
-          <p className="mt-0.5 text-[11px] text-brand-200">
-            {paidThisMonth} dues payments recorded this month
-          </p>
-          <p className="mt-2 text-[10px] leading-relaxed text-brand-300">
-            Demo data stored locally in your browser.
+          <p className="mt-2 text-[11px] text-neutral-400">
+            Signed in as {session?.name ?? "Diocesan Office"}
           </p>
         </div>
       </div>
@@ -196,15 +197,15 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen">
       {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-[264px] bg-gradient-to-b from-brand-900 via-brand-950 to-ink lg:block">
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-[264px] border-r border-neutral-200 bg-white lg:block">
         <SidebarContent />
       </aside>
 
       {/* Mobile drawer */}
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="absolute inset-0 bg-ink/50 backdrop-blur-sm" onClick={() => setOpen(false)} aria-hidden />
-          <aside className="animate-fade-up absolute inset-y-0 left-0 w-[290px] max-w-[85vw] bg-gradient-to-b from-brand-900 via-brand-950 to-ink shadow-2xl">
+          <div className="absolute inset-0 bg-[#101828]/40 backdrop-blur-[2px]" onClick={() => setOpen(false)} aria-hidden />
+          <aside className="animate-fade-up absolute inset-y-0 left-0 w-[290px] max-w-[85vw] border-r border-neutral-200 bg-white shadow-pop">
             <SidebarContent onNavigate={() => setOpen(false)} />
           </aside>
         </div>
@@ -212,33 +213,33 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <div className="lg:pl-[264px]">
         {/* Top bar */}
-        <header className="sticky top-0 z-20 border-b border-brand-100 bg-white/85 backdrop-blur">
+        <header className="sticky top-0 z-20 border-b border-neutral-200/70 bg-white/90 backdrop-blur">
           <div className="flex items-center gap-3 px-4 py-3 sm:px-6">
             <button
               onClick={() => setOpen(true)}
               aria-label="Open menu"
-              className="rounded-lg border border-brand-200 p-2 text-brand-800 lg:hidden"
+              className="rounded-lg border border-neutral-200 p-2 text-[#344054] lg:hidden"
             >
               <Menu className="h-5 w-5" />
             </button>
             <Link href="/" className="lg:hidden">
-              <LogoMark className="h-8 w-8" />
+              <BrandLogo className="h-8 w-8 rounded-full object-cover" />
             </Link>
             <div className="min-w-0 flex-1">
-              <h1 className="truncate text-[15px] font-bold text-ink">{heading.title}</h1>
-              <p className="hidden truncate text-xs text-brand-800/60 sm:block">{heading.sub}</p>
+              <h1 className="truncate text-sm font-semibold text-ink">{heading.title}</h1>
+              <p className="hidden truncate text-xs text-neutral-500 sm:block">{heading.sub}</p>
             </div>
             <div className="hidden items-center gap-2 sm:flex">
               <Link
                 href="/defaulters"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-brand-200 bg-white px-3 py-1.5 text-xs font-semibold text-brand-800 transition-colors hover:bg-brand-50"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#344054] transition-colors hover:border-neutral-300 hover:bg-neutral-50"
               >
                 <AlertCircle className="h-4 w-4 text-rose-500" />
                 Defaulter centre
               </Link>
             </div>
-            <div className="flex items-center gap-2.5 rounded-lg bg-brand-50 py-1.5 pr-1.5 pl-2 ring-1 ring-brand-100">
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-800 text-[11px] font-bold text-white">
+            <div className="flex items-center gap-2 border-l border-neutral-100 pl-3">
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-50 text-[11px] font-semibold text-brand-700 ring-1 ring-brand-100">
                 {(session?.name ?? "DO")
                   .split(" ")
                   .map((part) => part[0])
@@ -246,15 +247,17 @@ export function AppShell({ children }: { children: ReactNode }) {
                   .join("")
                   .toUpperCase()}
               </span>
-              <div className="hidden leading-tight sm:block">
-                <p className="max-w-[130px] truncate text-xs font-bold text-ink">{session?.name ?? "Diocesan Office"}</p>
-                <p className="text-[10px] text-brand-800/60">{db.settings.currency} · {session?.role ?? "Admin"}</p>
+              <div className="hidden leading-tight md:block">
+                <p className="max-w-[130px] truncate text-xs font-semibold text-ink">
+                  {session?.name ?? "Diocesan Office"}
+                </p>
+                <p className="text-[10px] text-neutral-500">{db.settings.currency}</p>
               </div>
               <button
                 onClick={signOut}
                 title="Sign out"
                 aria-label="Sign out"
-                className="rounded-lg p-2 text-brand-700/60 transition-colors hover:bg-rose-50 hover:text-rose-600"
+                className="rounded-lg p-2 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-rose-600"
               >
                 <LogOut className="h-4 w-4" />
               </button>
@@ -269,7 +272,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </main>
 
         <footer className="mx-auto w-full max-w-[1200px] px-4 pb-8 sm:px-6">
-          <p className="text-center text-[11px] text-brand-800/50">
+          <p className="text-center text-[11px] text-neutral-400">
             © {new Date().getFullYear()} {db.settings.dioceseName} · Diocese Network Management System
           </p>
         </footer>

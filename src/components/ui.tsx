@@ -3,6 +3,7 @@
 // Shared blue/white UI primitives used across every page.
 
 import { useEffect, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { Search, X } from "lucide-react";
 
 export function cn(...parts: (string | false | null | undefined)[]): string {
@@ -211,10 +212,13 @@ export function Modal({
     };
   }, [open, onClose]);
 
-  if (!open) return null;
+  // Portal to <body>: page wrappers carry entry animations (transforms), and a
+  // transformed ancestor would otherwise become the containing block for this
+  // fixed-position overlay, pushing the popup off-screen.
+  if (!open || typeof document === "undefined") return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto p-0 sm:items-center sm:p-4">
+  return createPortal(
+    <div className="fixed inset-0 z-[60] flex items-end justify-center overflow-y-auto p-0 sm:items-center sm:p-4">
       <div className="fixed inset-0 bg-ink/40 backdrop-blur-sm" onClick={onClose} aria-hidden />
       <div
         role="dialog"
@@ -246,7 +250,8 @@ export function Modal({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 

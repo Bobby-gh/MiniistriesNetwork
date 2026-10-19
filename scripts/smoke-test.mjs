@@ -92,7 +92,23 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // ---- 1. Register a new member through the form ----
   await clickByText(page, "button", "Register member");
-  await page.waitForSelector('input[placeholder="e.g. Kwame"]');
+  await page.waitForSelector('[role="dialog"] input[placeholder="e.g. Kwame"]');
+  // The popup must actually be on-screen and hit-testable (guards against
+  // transformed ancestors breaking position:fixed overlays).
+  const modalGeom = await page.evaluate(() => {
+    const d = document.querySelector('[role="dialog"]');
+    const r = d.getBoundingClientRect();
+    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    return {
+      onScreen: r.top >= 0 && r.left >= 0 && r.bottom <= window.innerHeight && r.right <= window.innerWidth,
+      clickable: hit ? d.contains(hit) : false,
+    };
+  });
+  check(
+    "Register modal opens on-screen and is clickable",
+    modalGeom.onScreen && modalGeom.clickable,
+    JSON.stringify(modalGeom),
+  );
   await page.type('input[placeholder="e.g. Kwame"]', "Abigail");
   await page.type('input[placeholder="e.g. Asante"]', "SmokeTest");
   await page.type('input[placeholder="+233 24 000 0000"]', "+233 24 111 2222");

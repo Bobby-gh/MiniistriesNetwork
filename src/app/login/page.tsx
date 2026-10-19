@@ -47,23 +47,15 @@ export default function LoginPage() {
   return (
     <div className="grid min-h-screen bg-surface lg:grid-cols-[1fr_1.05fr]">
       {/* Full-height church image panel */}
-      <aside className="relative hidden min-h-screen flex-col items-center justify-end overflow-hidden border-r border-neutral-200 bg-white px-10 pb-12 lg:flex">
+      <aside className="relative hidden min-h-screen overflow-hidden bg-neutral-950 lg:block">
         <Image
           src="/church-login.jpg"
-          alt="Church interior with stained-glass windows"
+          alt="Congregation gathered for worship in a contemporary church"
           fill
           priority
           sizes="50vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" aria-hidden />
-        <div className="relative z-10 w-full py-5 text-center text-white">
-          <h1 className="text-2xl font-semibold tracking-tight">Diocese Network</h1>
-          <p className="mt-2 text-sm text-white/85">{db.settings.dioceseName}</p>
-          <p className="mt-4 text-xs text-white/70">
-            © {new Date().getFullYear()} {db.settings.dioceseName}
-          </p>
-        </div>
       </aside>
 
       {/* Form */}

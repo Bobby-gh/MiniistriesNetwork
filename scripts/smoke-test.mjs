@@ -1,11 +1,11 @@
 /* Browser smoke test for the Diocese Network app.
  * Drives the real UI in headless Chrome against `npm start` on :3000.
- * Usage: node scripts/smoke-test.cjs [chromePath]
+ * Usage: node scripts/smoke-test.mjs [chromePath]
  */
-const puppeteer = require("puppeteer-core");
-const fs = require("fs");
-const os = require("os");
-const path = require("path");
+import puppeteer from "puppeteer-core";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 
 const BASE = process.env.APP_URL || "http://localhost:3000";
 const CHROME =
@@ -67,6 +67,21 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   // Start from a clean demo dataset
   await page.goto(`${BASE}/`, { waitUntil: "networkidle0" });
   await page.evaluate(() => localStorage.clear());
+
+  // ---- 0. Auth gate: signed-out access redirects to /login ----
+  await page.goto(`${BASE}/dues`, { waitUntil: "networkidle0" });
+  await sleep(900);
+  const gated = page.url().includes("/login") && (await page.$('input[type="password"]')) !== null;
+  check("Signed-out access redirects to the login page", gated, page.url());
+
+  // ---- 1. Demo login lands on the general dashboard ----
+  await page.type('input[type="password"]', "demo1234"); // email is prefilled
+  await page.click('button[type="submit"]');
+  await page.waitForFunction(() => !location.pathname.includes("/login"), { timeout: 15000 });
+  await sleep(600);
+  const loggedIn = await page.evaluate(() => document.body.innerText.includes("Welcome back"));
+  check("Demo login signs in to the general dashboard", page.url() === `${BASE}/` && loggedIn, page.url());
+
   await page.goto(`${BASE}/members`, { waitUntil: "networkidle0" });
   await page.waitForSelector('button');
   await sleep(600);
@@ -155,6 +170,17 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   await sleep(500);
   const persisted = await page.evaluate(() => document.body.innerText.includes("SmokeTest"));
   check("Register persists across reloads", persisted, "new member visible after navigation");
+
+  // ---- 6. Sign out returns to the login page ----
+  await page.goto(`${BASE}/`, { waitUntil: "networkidle0" });
+  await sleep(600);
+  await page.evaluate(() => {
+    const b = [...document.querySelectorAll("button")].find((x) => x.title === "Sign out");
+    if (b) b.click();
+  });
+  await page.waitForFunction(() => location.pathname.includes("/login"), { timeout: 10000 }).catch(() => {});
+  await sleep(300);
+  check("Sign out returns to the login page", page.url().includes("/login"), page.url());
 
   await browser.close();
 

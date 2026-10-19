@@ -13,6 +13,7 @@ import {
   HandCoins,
   LayoutDashboard,
   Landmark,
+  LogOut,
   Menu,
   PiggyBank,
   Repeat2,
@@ -27,6 +28,7 @@ import {
 import { Logo, LogoMark } from "./logo";
 import { cn } from "./ui";
 import { useStore } from "@/lib/store";
+import { useAuth } from "@/lib/auth";
 import { defaulters } from "@/lib/selectors";
 import { currentMonthKey } from "@/lib/format";
 
@@ -187,6 +189,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const { db } = useStore();
+  const { session, signOut } = useAuth();
 
   const heading = TITLES[pathname] ?? { title: "Diocese Network", sub: "" };
 
@@ -234,14 +237,27 @@ export function AppShell({ children }: { children: ReactNode }) {
                 Defaulter centre
               </Link>
             </div>
-            <div className="flex items-center gap-2.5 rounded-lg bg-brand-50 py-1.5 pr-3 pl-2 ring-1 ring-brand-100">
+            <div className="flex items-center gap-2.5 rounded-lg bg-brand-50 py-1.5 pr-1.5 pl-2 ring-1 ring-brand-100">
               <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-800 text-[11px] font-bold text-white">
-                DO
+                {(session?.name ?? "DO")
+                  .split(" ")
+                  .map((part) => part[0])
+                  .slice(0, 2)
+                  .join("")
+                  .toUpperCase()}
               </span>
               <div className="hidden leading-tight sm:block">
-                <p className="text-xs font-bold text-ink">Diocesan Office</p>
-                <p className="text-[10px] text-brand-800/60">{db.settings.currency} · Admin</p>
+                <p className="max-w-[130px] truncate text-xs font-bold text-ink">{session?.name ?? "Diocesan Office"}</p>
+                <p className="text-[10px] text-brand-800/60">{db.settings.currency} · {session?.role ?? "Admin"}</p>
               </div>
+              <button
+                onClick={signOut}
+                title="Sign out"
+                aria-label="Sign out"
+                className="rounded-lg p-2 text-brand-700/60 transition-colors hover:bg-rose-50 hover:text-rose-600"
+              >
+                <LogOut className="h-4 w-4" />
+              </button>
             </div>
           </div>
         </header>

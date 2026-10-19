@@ -30,29 +30,40 @@ npm run build      # production build
 npm start          # serve the production build
 ```
 
+The app opens on the **login page** (`/login`). Authentication is a stub for now: any
+valid email with a 4+ character password signs you in (try `admin@diocese.org` /
+`demo1234`), and the session is kept in `localStorage`. Signing out is the button
+next to your name in the top bar. Every other route is protected by
+`src/components/auth-gate.tsx`.
+
+**Adding real authentication later:** replace the placeholder in `signIn()` in
+`src/lib/auth.tsx` with your provider call (NextAuth, Clerk, custom `/api/login`).
+All pages read `useAuth()`, so nothing else needs to change — optionally issue
+server-side session cookies there instead of localStorage.
+
 On first load the app seeds a realistic demo diocese (5 parishes, 28 members, 7 months of payments and attendance). **All data is stored in the browser's `localStorage`** under `diocese-network-db-v1`, so the app runs instantly with no backend. Use *Settings → Reset demo data* to restore the seed, or *Download backup* for a JSON snapshot.
 
 ## Smoke test
 
-A headless-Chrome test drives the real UI (register a member, record dues, generate defaulter alerts, save attendance, verify persistence):
+A headless-Chrome test drives the real UI (auth gate redirect, demo login, register a member, record dues, generate defaulter alerts, save attendance, verify persistence, sign out):
 
 ```bash
 npm start                # in one terminal
-node scripts/smoke-test.cjs   # in another
+node scripts/smoke-test.mjs   # in another
 ```
 
 ## Project structure
 
 ```
 src/
-  app/            14 pages (dashboard, members, parishes, transfers, attendance,
-                  dues, donations, funeral-levy, building-fund, payments,
-                  defaulters, alerts, reports, settings)
-  components/     shell (sidebar/topbar), logo, UI kit, member form,
+  app/            15 pages (login, dashboard, members, parishes, transfers,
+                  attendance, dues, donations, funeral-levy, building-fund,
+                  payments, defaulters, alerts, reports, settings)
+  components/     auth gate, shell (sidebar/topbar), logo, UI kit, member form,
                   payment form, generic finance ledger page
   lib/            types, seed data, selectors (dues/defaulters/analytics),
                   persistent store (useSyncExternalStore + localStorage),
-                  formatting & CSV helpers
+                  auth session store, formatting & CSV helpers
 ```
 
 The four money ledgers (donations, funeral levy, building fund, other payments) share one battle-tested `FinancePage` component; dues has its own reconciliation screen.

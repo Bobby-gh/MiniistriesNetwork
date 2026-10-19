@@ -18,6 +18,7 @@ import {
   Wallet,
 } from "lucide-react";
 import { useStore } from "@/lib/store";
+import { useAuth } from "@/lib/auth";
 import type { PaymentType } from "@/lib/types";
 import { currentMonthKey, formatDate, formatMoney, lastNMonths, monthLabel, todayISO } from "@/lib/format";
 import { attendanceRate, defaulters, duesForMonth, incomeSeries, memberName, type MonthIncome } from "@/lib/selectors";
@@ -52,6 +53,7 @@ const CATEGORY_LABEL: Record<PaymentType, string> = {
 
 export default function DashboardPage() {
   const { db } = useStore();
+  const { session } = useAuth();
   const symbol = db.settings.currencySymbol;
   const month = currentMonthKey();
   const monthName = monthLabel(month);
@@ -92,7 +94,7 @@ export default function DashboardPage() {
     <div>
       <PageHeader
         title={db.settings.dioceseName}
-        subtitle={`${db.settings.dioceseSubtitle} · ${formatDate(todayISO())}`}
+        subtitle={`Welcome back, ${session?.name ?? "friend"} · ${db.settings.dioceseSubtitle} · ${formatDate(todayISO())}`}
         actions={
           <>
             <Link href="/attendance">
